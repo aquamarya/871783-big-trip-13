@@ -6,7 +6,6 @@ import {createSortingTemplate} from "./view/sorting";
 import {createTripEventListTemplate} from "./view/trip-event-list";
 import {createTripEventItemTemplate} from "./view/trip-event-item";
 import {createEditEventTemplate} from "./view/edit-event";
-import {createNewEventTemplate} from "./view/new-event";
 
 const EVENT_AMOUNT = 3;
 
@@ -27,7 +26,6 @@ render(tripControls, createFiltersTemplate(), `beforeend`);
 const pageMain = document.querySelector(`.page-main`);
 const tripEvents = pageMain.querySelector(`.trip-events`);
 render(tripEvents, createSortingTemplate(), `beforeend`);
-render(tripEvents, createEditEventTemplate(), `beforeend`);
 render(tripEvents, createTripEventListTemplate(), `beforeend`);
 
 const eventsList = document.querySelector(`.trip-events__list`);
@@ -37,4 +35,3 @@ for (let i = 0; i < EVENT_AMOUNT; i++) {
 }
 
 render(eventsList, createEditEventTemplate(), `afterbegin`);
-render(eventsList, createNewEventTemplate(), `afterbegin`);
