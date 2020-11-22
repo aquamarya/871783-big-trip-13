@@ -6,12 +6,8 @@ import {createSortingTemplate} from "./view/sorting";
 import {createTripEventListTemplate} from "./view/trip-event-list";
 import {createTripEventItemTemplate} from "./view/trip-event-item";
 import {createEditEventTemplate} from "./view/edit-event";
-
-const EVENT_AMOUNT = 3;
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
+import {EVENT_AMOUNT} from "./consts";
+import {render} from "./utils";
 
 const tripMain = document.querySelector(`.trip-main`);
 render(tripMain, createTripInfoTemplate(), `afterbegin`);
