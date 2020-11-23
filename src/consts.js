@@ -1,8 +1,18 @@
-export {EVENT_AMOUNT, eventType, eventPlace, photosAmount, descriptionsAmount, eventPlaceDescriptions, EventPrice, OffersAmount, eventOffers};
+export {EVENT_AMOUNT, eventTypes, eventPlaces, photosAmount, descriptionsAmount, eventPlaceDescriptions, EventPrice, OffersAmount, eventOffers};
 
 const EVENT_AMOUNT = 20;
-const eventType = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
-const eventPlace = [`Amsterdam`, `Geneva`, `Chamonix`, `London`, `Berlin`, `Copenhagen`, `Tokyo`, `New York`, `Milan`];
+const eventTypes = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
+const eventPlaces = [
+  `Amsterdam`,
+  `Geneva`,
+  `Chamonix`,
+  `London`,
+  `Berlin`,
+  `Copenhagen`,
+  `Tokyo`,
+  `New York`,
+  `Milan`
+];
 const descriptionsAmount = {
   MIN: 1,
   MAX: 5
@@ -34,28 +44,28 @@ const OffersAmount = {
 };
 const eventOffers = [
   {
-    id: `event-offer-luggage-2`,
     title: `Add luggage`,
-    price: 50
+    price: 50,
+    isChecked: false
   },
   {
-    id: `event-offer-comfort-2`,
     title: `Switch to comfort class`,
-    price: 80
+    price: 80,
+    isChecked: false
   },
   {
-    id: `event-offer-meal-2`,
     title: `Add meal`,
-    price: 15
+    price: 15,
+    isChecked: false
   },
   {
-    id: `event-offer-seats-2`,
     title: `Choose seats`,
-    price: 5
+    price: 5,
+    isChecked: false
   },
   {
-    id: `event-offer-train-2`,
     title: `Travel by train`,
-    price: 40
+    price: 40,
+    isChecked: false
   },
 ];

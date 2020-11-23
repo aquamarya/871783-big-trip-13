@@ -8,9 +8,12 @@ import {createTripEventItemTemplate} from "./view/trip-event-item";
 import {createEditEventTemplate} from "./view/edit-event";
 import {EVENT_AMOUNT} from "./consts";
 import {render} from "./utils";
+import {generateTripEvent} from "./mock/event";
 
+const events = new Array(EVENT_AMOUNT).fill().map(generateTripEvent);
+// console.log(events);
 const tripMain = document.querySelector(`.trip-main`);
-render(tripMain, createTripInfoTemplate(), `afterbegin`);
+render(tripMain, createTripInfoTemplate(events), `afterbegin`);
 
 const tripInfo = document.querySelector(`.trip-info`);
 render(tripInfo, createTripCostTemplate(), `beforeend`);
@@ -26,8 +29,8 @@ render(tripEvents, createTripEventListTemplate(), `beforeend`);
 
 const eventsList = document.querySelector(`.trip-events__list`);
 
-for (let i = 0; i < EVENT_AMOUNT; i++) {
-  render(eventsList, createTripEventItemTemplate(), `beforeend`);
+for (let i = 1; i < EVENT_AMOUNT; i++) {
+  render(eventsList, createTripEventItemTemplate(events[i]), `beforeend`);
 }
 
-render(eventsList, createEditEventTemplate(), `afterbegin`);
+render(eventsList, createEditEventTemplate(events[0]), `afterbegin`);
