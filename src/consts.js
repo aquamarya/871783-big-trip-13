@@ -35,7 +35,7 @@ const photosAmount = {
   MAX: 3
 };
 const EventPrice = {
-  MIN: 100,
+  MIN: 10,
   MAX: 1000
 };
 const OffersAmount = {

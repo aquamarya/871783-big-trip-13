@@ -5,22 +5,26 @@ import {eventTypes, eventPlaces, photosAmount, descriptionsAmount, eventPlaceDes
 
 export const generateTripEvent = () => {
   const id = nanoid();
-  const type = getRandomInteger(0, eventTypes.length - 1);
-  const city = getRandomInteger(0, eventPlaces.length - 1);
+  // const type = getRandomInteger(0, eventTypes.length - 1);
+  // const city = getRandomInteger(0, eventPlaces.length - 1);
+  // const type = getRandomElementFromArr(eventTypes);
+  // const city = getRandomElementFromArr(eventPlaces);
   const cityDescription = getRandomCityDescriptions();
   const placePhotos = getPlacePhotos();
-  const dateInterval = getDateInterval();
+  // const dateTime = getDateTime();
+  const {startEventTime, endEventTime} = getDateTime();
   const price = getRandomInteger(EventPrice.MIN, EventPrice.MAX);
   // const hasOffer = getRandomInteger(OffersAmount.MIN, OffersAmount.MAX);
   // let offers = getRandomOffers();
   const isFavorite = Boolean(getRandomInteger());
   return {
     id,
-    type,
-    city,
+    type: getRandomElementFromArr(eventTypes),
+    city: getRandomElementFromArr(eventPlaces),
     cityDescription,
     placePhotos,
-    dateInterval,
+    startEventTime,
+    endEventTime,
     price,
     offers: getRandomInteger(OffersAmount.MIN, OffersAmount.MAX) ? getRandomOffers(eventOffers) : null,
     // offers: getRandomOffers(),
@@ -45,19 +49,23 @@ const getPlacePhotos = () => {
   return cityPhotosLinks;
 };
 
-const getDateInterval = () => {
+const getDateTime = () => {
   const dateTimeFormat = `2019-12-25T16:00`;
-  const isDate = Boolean(getRandomInteger(0, 1));
-
-  if (!isDate) {
-    return null;
-  }
-
   const maxDaysGap = 7;
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-
-  return dayjs(dateTimeFormat).add(daysGap, `day`).toDate();
+  const startEventTime = dayjs(dateTimeFormat).add(getRandomInteger(-maxDaysGap, maxDaysGap), `day`).toDate();
+  const endEventTime = dayjs(startEventTime).add(getRandomInteger(1, maxDaysGap), `day`).toDate();
+  return {startEventTime, endEventTime};
 };
+
+export const getDuration = () => {
+
+};
+
+// const generateDate = () => {
+//   return (
+//     Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * getRandomInteger(0, 60) * 60 * 1000
+//   );
+// };
 
 const getRandomOffers = (offers) => {
   const randomOffers = [];

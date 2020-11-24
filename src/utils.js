@@ -7,10 +7,6 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-// const getRandomNumber = (min, max) => {
-//   return Math.floor(Math.random() * (max - min)) + min;
-// };
-
 const getRandomElementFromArr = (array) => {
   const randomIndex = () => getRandomInteger(0, array.length - 1);
 
