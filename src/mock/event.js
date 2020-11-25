@@ -1,34 +1,35 @@
 import {nanoid} from "nanoid";
 import dayjs from "dayjs";
-import {getRandomInteger, getRandomElementFromArr} from "../utils";
+import {getRandomInteger, getRandomArrayElement} from "../utils";
 import {eventTypes, eventPlaces, photosAmount, descriptionsAmount, eventPlaceDescriptions, EventPrice, OffersAmount, eventOffers} from "../consts";
 
 export const generateTripEvent = () => {
   const id = nanoid();
   // const type = getRandomInteger(0, eventTypes.length - 1);
   // const city = getRandomInteger(0, eventPlaces.length - 1);
-  // const type = getRandomElementFromArr(eventTypes);
-  // const city = getRandomElementFromArr(eventPlaces);
+  const type = getRandomArrayElement(eventTypes);
+  const city = getRandomArrayElement(eventPlaces);
   const cityDescription = getRandomCityDescriptions();
   const placePhotos = getPlacePhotos();
   // const dateTime = getDateTime();
   const {startEventTime, endEventTime} = getDateTime();
   const price = getRandomInteger(EventPrice.MIN, EventPrice.MAX);
-  // const hasOffer = getRandomInteger(OffersAmount.MIN, OffersAmount.MAX);
-  // let offers = getRandomOffers();
+  let offers = getRandomOffers(OffersAmount.MIN, OffersAmount.MAX);
   const isFavorite = Boolean(getRandomInteger());
   return {
     id,
-    type: getRandomElementFromArr(eventTypes),
-    city: getRandomElementFromArr(eventPlaces),
+    // type: getRandomArrayElement(eventTypes),
+    type,
+    // city: getRandomArrayElement(eventPlaces),
+    city,
     cityDescription,
     placePhotos,
     startEventTime,
     endEventTime,
     price,
-    offers: getRandomInteger(OffersAmount.MIN, OffersAmount.MAX) ? getRandomOffers(eventOffers) : null,
+    // offers: getRandomInteger(OffersAmount.MIN, OffersAmount.MAX) ? getRandomOffers(eventOffers) : null,
     // offers: getRandomOffers(),
-    // offers,
+    offers,
     isFavorite,
   };
 };
@@ -70,7 +71,7 @@ export const getDuration = () => {
 const getRandomOffers = (offers) => {
   const randomOffers = [];
   for (let i = 0; i < getRandomInteger(OffersAmount.MIN, OffersAmount.MAX); i++) {
-    const offer = getRandomElementFromArr(offers);
+    const offer = getRandomArrayElement(offers);
     if (randomOffers.indexOf(offer) === -1) {
       randomOffers.push(offer);
     }
@@ -78,8 +79,8 @@ const getRandomOffers = (offers) => {
   return randomOffers;
 };
 
-// const getRandomOffers = (offers) => {
-//   getRandomElementFromArr(offers, OffersAmount.MIN, OffersAmount.MAX).map((offer) => {
+// const getRandomOffers = () => {
+//   return getRandomArrayElement(eventOffers, OffersAmount.MIN, OffersAmount.MAX).map((offer) => {
 //     offer.checked = Boolean(getRandomInteger(0, 1));
 //
 //     return offer;
