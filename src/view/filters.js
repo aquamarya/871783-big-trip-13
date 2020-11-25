@@ -3,11 +3,11 @@ import {FilterTypes} from "../consts";
 export const createFiltersTemplate = () => {
   const getFilters = () => {
     return Object.values(FilterTypes).map((filter) => {
-      const filterToLower = filter.toLowerCase();
+      const filterToLow = filter.toLowerCase();
       return (
         `<div class="trip-filters__filter">
-          <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterToLower}">
-          <label class="trip-filters__filter-label" for="filter-${filterToLower}">${filter}</label>
+          <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterToLow}">
+          <label class="trip-filters__filter-label" for="filter-${filterToLow}">${filter}</label>
         </div>`
       );
     }).join(``);
