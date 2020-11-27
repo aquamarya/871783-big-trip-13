@@ -1,7 +1,7 @@
-export const createTripInfoTemplate = (event) => {
+const createTripInfoTemplate = (event) => {
   const {startEventTime} = event;
   const getRouteInfo = () => {
-    let routeInfo = [];
+    const routeInfo = [];
     for (const eventItem of event) {
       routeInfo.push(eventItem.city);
     }
@@ -17,3 +17,5 @@ export const createTripInfoTemplate = (event) => {
     </section>
   `;
 };
+
+export {createTripInfoTemplate};

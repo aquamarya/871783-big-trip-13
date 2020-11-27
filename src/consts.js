@@ -1,15 +1,3 @@
-export {
-  EVENT_AMOUNT,
-  eventTypes,
-  eventPlaces,
-  photosAmount,
-  descriptionsAmount,
-  eventPlaceDescriptions,
-  EventPrice,
-  OffersAmount,
-  eventOffers,
-  FilterTypes
-};
 const EVENT_AMOUNT = 20;
 const eventTypes = [
   `Taxi`,
@@ -63,7 +51,7 @@ const OffersAmount = {
   MIN: 1,
   MAX: 5
 };
-let eventOffers = [
+const eventOffers = [
   {
     title: `Add luggage`,
     price: 50,
@@ -94,4 +82,17 @@ const FilterTypes = {
   EVERYTHING: `Everything`,
   FUTURE: `Future`,
   PAST: `Past`,
+};
+
+export {
+  EVENT_AMOUNT,
+  eventTypes,
+  eventPlaces,
+  photosAmount,
+  descriptionsAmount,
+  eventPlaceDescriptions,
+  EventPrice,
+  OffersAmount,
+  eventOffers,
+  FilterTypes
 };

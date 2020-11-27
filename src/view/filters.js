@@ -1,6 +1,6 @@
 import {FilterTypes} from "../consts";
 
-export const createFiltersTemplate = () => {
+const createFiltersTemplate = () => {
   const getFilters = () => {
     return Object.values(FilterTypes).map((filter) => {
       const filterToLow = filter.toLowerCase();
@@ -21,3 +21,5 @@ export const createFiltersTemplate = () => {
     </form>
   `;
 };
+
+export {createFiltersTemplate};

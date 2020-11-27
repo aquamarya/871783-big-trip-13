@@ -1,4 +1,4 @@
-export const createTripEventItemTemplate = (event) => {
+const createTripEventItemTemplate = (event) => {
   // const {type, city, offers, price, startEventTime, endEventTime, isFavorite} = event;
   const {type, city, price, startEventTime, endEventTime, isFavorite} = event;
   const getSchedule = () => {
@@ -13,7 +13,7 @@ export const createTripEventItemTemplate = (event) => {
     </div>
     `;
   };
-  //
+
   // const getOffer = () => {
   //   return `
   //   <ul class="event__selected-offers">
@@ -62,3 +62,5 @@ export const createTripEventItemTemplate = (event) => {
     </li>
   `;
 };
+
+export {createTripEventItemTemplate};

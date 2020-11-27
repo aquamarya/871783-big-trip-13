@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import {getRandomInteger, getRandomArrayElement} from "../utils";
 import {eventTypes, eventPlaces, photosAmount, descriptionsAmount, eventPlaceDescriptions, EventPrice, OffersAmount, eventOffers} from "../consts";
 
-export const generateTripEvent = () => {
+const generateTripEvent = () => {
   const id = nanoid();
   const type = getRandomArrayElement(eventTypes);
   const city = getRandomArrayElement(eventPlaces);
@@ -12,7 +12,7 @@ export const generateTripEvent = () => {
   const {startEventTime, endEventTime} = getDateTime();
   const price = getRandomInteger(EventPrice.MIN, EventPrice.MAX);
   const offers = getRandomArrayElement(eventOffers, OffersAmount.MIN, OffersAmount.MAX);
-  const isFavorite = Boolean(getRandomInteger());
+  const isFavorite = Boolean(getRandomInteger(0, 1));
   return {
     id,
     type,
@@ -36,11 +36,9 @@ const getRandomCityDescriptions = () => {
 };
 
 const getPlacePhotos = () => {
-  const cityPhotosLinks = [];
-  for (let i = 0; i < getRandomInteger(photosAmount.MIN, photosAmount.MAX); i++) {
-    cityPhotosLinks.push(`http://picsum.photos/248/152?r=${Math.random()}`);
-  }
-  return cityPhotosLinks;
+  return new Array(getRandomInteger(photosAmount.MIN, photosAmount.MAX))
+    .fill(``)
+    .map(()=>`http://picsum.photos/248/152?r=${Math.random()})`);
 };
 
 const getDateTime = () => {
@@ -49,10 +47,6 @@ const getDateTime = () => {
   const startEventTime = dayjs(dateTimeFormat).add(getRandomInteger(-maxDaysGap, maxDaysGap), `day`).toDate();
   const endEventTime = dayjs(startEventTime).add(getRandomInteger(1, maxDaysGap), `day`).toDate();
   return {startEventTime, endEventTime};
-};
-
-export const getDuration = () => {
-
 };
 
 // const getRandomOffers = (offers) => {
@@ -73,3 +67,5 @@ export const getDuration = () => {
 //     return offer;
 //   });
 // };
+
+export {generateTripEvent};
