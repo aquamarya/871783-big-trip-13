@@ -11,8 +11,6 @@ import {EVENT_AMOUNT} from "./consts";
 import {render} from "./utils";
 import {generateTripEvent} from "./mock/event";
 
-// const events = new Array(EVENT_AMOUNT).fill().map(generateTripEvent);
-// console.log(events);
 const createEvents = (amount) => {
   return new Array(amount)
     .fill(``)
@@ -21,7 +19,6 @@ const createEvents = (amount) => {
 };
 const events = createEvents(EVENT_AMOUNT);
 
-// events.slice().sort((a, b) => a.startEventTime - b.startEventTime);
 const tripMain = document.querySelector(`.trip-main`);
 render(tripMain, createTripInfoTemplate(events), `afterbegin`);
 

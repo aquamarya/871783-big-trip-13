@@ -54,30 +54,33 @@ const OffersAmount = {
 const eventOffers = [
   {
     title: `Add luggage`,
-    price: 50,
-    isChecked: false
+    isChecked: false,
+    price: 50
   },
   {
     title: `Switch to comfort class`,
-    price: 80,
-    isChecked: false
+    isChecked: false,
+    price: 80
   },
   {
     title: `Add meal`,
-    price: 15,
-    isChecked: false
+    isChecked: false,
+    price: 15
   },
   {
     title: `Choose seats`,
-    price: 5,
-    isChecked: false
+    isChecked: false,
+    price: 5
   },
   {
     title: `Travel by train`,
-    price: 40,
-    isChecked: false
+    isChecked: false,
+    price: 40
   },
 ];
+
+const offerPrices = [50, 80, 15, 5, 40];
+
 const FilterTypes = {
   EVERYTHING: `Everything`,
   FUTURE: `Future`,
@@ -93,6 +96,7 @@ export {
   eventPlaceDescriptions,
   EventPrice,
   OffersAmount,
+  offerPrices,
   eventOffers,
   FilterTypes
 };

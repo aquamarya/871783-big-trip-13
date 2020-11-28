@@ -1,31 +1,7 @@
 import {nanoid} from "nanoid";
 import dayjs from "dayjs";
 import {getRandomInteger, getRandomArrayElement} from "../utils";
-import {eventTypes, eventPlaces, photosAmount, descriptionsAmount, eventPlaceDescriptions, EventPrice, OffersAmount, eventOffers} from "../consts";
-
-const generateTripEvent = () => {
-  const id = nanoid();
-  const type = getRandomArrayElement(eventTypes);
-  const city = getRandomArrayElement(eventPlaces);
-  const cityDescription = getRandomCityDescriptions();
-  const placePhotos = getPlacePhotos();
-  const {startEventTime, endEventTime} = getDateTime();
-  const price = getRandomInteger(EventPrice.MIN, EventPrice.MAX);
-  const offers = getRandomArrayElement(eventOffers, OffersAmount.MIN, OffersAmount.MAX);
-  const isFavorite = Boolean(getRandomInteger(0, 1));
-  return {
-    id,
-    type,
-    city,
-    cityDescription,
-    placePhotos,
-    startEventTime,
-    endEventTime,
-    price,
-    offers,
-    isFavorite,
-  };
-};
+import {eventTypes, eventPlaces, photosAmount, descriptionsAmount, eventPlaceDescriptions, EventPrice, OffersAmount, offerPrices} from "../consts";
 
 const getRandomCityDescriptions = () => {
   let description = ``;
@@ -49,23 +25,41 @@ const getDateTime = () => {
   return {startEventTime, endEventTime};
 };
 
-// const getRandomOffers = (offers) => {
-//   const randomOffers = [];
-//   for (let i = 0; i < getRandomInteger(OffersAmount.MIN, OffersAmount.MAX); i++) {
-//     const offer = getRandomArrayElement(offers);
-//     if (randomOffers.indexOf(offer) === -1) {
-//       randomOffers.push(offer);
-//     }
-//   }
-//   return randomOffers;
-// };
+const getRandomOffers = () => {
+  const randomOffers = [];
+  eventTypes.forEach((eventType) => {
+    for (let i = 0; i < getRandomInteger(OffersAmount.MIN, OffersAmount.MAX); i++) {
+      randomOffers.push({
+        type: eventType,
+        title: `${eventType} offer ${i}`,
+        price: offerPrices[getRandomInteger(0, offerPrices.length - 1)],
+      });
+    }
+  });
+  return randomOffers;
+};
 
-// const getRandomOffers = () => {
-//   return getRandomArrayElement(eventOffers, OffersAmount.MIN, OffersAmount.MAX).map((offer) => {
-//     offer.checked = Boolean(getRandomInteger(0, 1));
-//
-//     return offer;
-//   });
-// };
+const generateTripEvent = () => {
+  const id = nanoid();
+  const eventType = getRandomArrayElement(eventTypes);
+  const city = getRandomArrayElement(eventPlaces);
+  const cityDescription = getRandomCityDescriptions();
+  const placePhotos = getPlacePhotos();
+  const {startEventTime, endEventTime} = getDateTime();
+  const price = getRandomInteger(EventPrice.MIN, EventPrice.MAX);
+  const isFavorite = Boolean(getRandomInteger(0, 1));
+  return {
+    id,
+    type: eventType,
+    city,
+    cityDescription,
+    placePhotos,
+    startEventTime,
+    endEventTime,
+    price,
+    offers: getRandomOffers().filter((offer) => offer.type === eventType),
+    isFavorite,
+  };
+};
 
 export {generateTripEvent};

@@ -12,7 +12,6 @@ const createTripInfoTemplate = (event) => {
       <div class="trip-info__main">
         <h1 class="trip-info__title">${getRouteInfo().join(` &mdash; `)}</h1>
         <p class="trip-info__dates">${startEventTime}</p>
-        <p class="trip-info__dates"></p>
       </div>
     </section>
   `;
