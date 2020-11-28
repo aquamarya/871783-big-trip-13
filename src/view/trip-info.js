@@ -1,10 +1,20 @@
-export const createTripInfoTemplate = () => {
+const createTripInfoTemplate = (event) => {
+  const {startEventTime} = event;
+  const getRouteInfo = () => {
+    const routeInfo = [];
+    for (const eventItem of event) {
+      routeInfo.push(eventItem.city);
+    }
+    return routeInfo.reverse();
+  };
   return `
     <section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
-        <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
-        <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
+        <h1 class="trip-info__title">${getRouteInfo().join(` &mdash; `)}</h1>
+        <p class="trip-info__dates">${startEventTime}</p>
       </div>
     </section>
   `;
 };
+
+export {createTripInfoTemplate};

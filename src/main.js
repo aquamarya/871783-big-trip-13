@@ -6,15 +6,21 @@ import {createSortingTemplate} from "./view/sorting";
 import {createTripEventListTemplate} from "./view/trip-event-list";
 import {createTripEventItemTemplate} from "./view/trip-event-item";
 import {createEditEventTemplate} from "./view/edit-event";
+import {createNewEventTemplate} from "./view/new-event";
+import {EVENT_AMOUNT} from "./consts";
+import {render} from "./utils";
+import {generateTripEvent} from "./mock/event";
 
-const EVENT_AMOUNT = 3;
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
+const createEvents = (amount) => {
+  return new Array(amount)
+    .fill(``)
+    .map(generateTripEvent)
+    .sort((a, b) => a.startEventTime - b.startEventTime);
 };
+const events = createEvents(EVENT_AMOUNT);
 
 const tripMain = document.querySelector(`.trip-main`);
-render(tripMain, createTripInfoTemplate(), `afterbegin`);
+render(tripMain, createTripInfoTemplate(events), `afterbegin`);
 
 const tripInfo = document.querySelector(`.trip-info`);
 render(tripInfo, createTripCostTemplate(), `beforeend`);
@@ -30,8 +36,11 @@ render(tripEvents, createTripEventListTemplate(), `beforeend`);
 
 const eventsList = document.querySelector(`.trip-events__list`);
 
-for (let i = 0; i < EVENT_AMOUNT; i++) {
-  render(eventsList, createTripEventItemTemplate(), `beforeend`);
+for (let i = 1; i < events.length; i++) {
+  render(eventsList, createTripEventItemTemplate(events[i]), `beforeend`);
 }
 
-render(eventsList, createEditEventTemplate(), `afterbegin`);
+render(eventsList, createEditEventTemplate(events[0]), `afterbegin`);
+render(eventsList, createNewEventTemplate(events[0]), `afterbegin`);
+
+export {events};

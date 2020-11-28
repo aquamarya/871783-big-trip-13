@@ -1,0 +1,65 @@
+import {nanoid} from "nanoid";
+import dayjs from "dayjs";
+import {getRandomInteger, getRandomArrayElement} from "../utils";
+import {eventTypes, eventPlaces, photosAmount, descriptionsAmount, eventPlaceDescriptions, EventPrice, OffersAmount, offerPrices} from "../consts";
+
+const getRandomCityDescriptions = () => {
+  let description = ``;
+  for (let i = 0; i < getRandomInteger(descriptionsAmount.MIN, descriptionsAmount.MAX); i++) {
+    description += eventPlaceDescriptions[i];
+  }
+  return description.trim();
+};
+
+const getPlacePhotos = () => {
+  return new Array(getRandomInteger(photosAmount.MIN, photosAmount.MAX))
+    .fill(``)
+    .map(()=>`http://picsum.photos/248/152?r=${Math.random()})`);
+};
+
+const getDateTime = () => {
+  const dateTimeFormat = `2019-12-25T16:00`;
+  const maxDaysGap = 7;
+  const startEventTime = dayjs(dateTimeFormat).add(getRandomInteger(-maxDaysGap, maxDaysGap), `day`).toDate();
+  const endEventTime = dayjs(startEventTime).add(getRandomInteger(1, maxDaysGap), `day`).toDate();
+  return {startEventTime, endEventTime};
+};
+
+const getRandomOffers = () => {
+  const randomOffers = [];
+  eventTypes.forEach((eventType) => {
+    for (let i = 0; i < getRandomInteger(OffersAmount.MIN, OffersAmount.MAX); i++) {
+      randomOffers.push({
+        type: eventType,
+        title: `${eventType} offer ${i}`,
+        price: offerPrices[getRandomInteger(0, offerPrices.length - 1)],
+      });
+    }
+  });
+  return randomOffers;
+};
+
+const generateTripEvent = () => {
+  const id = nanoid();
+  const eventType = getRandomArrayElement(eventTypes);
+  const city = getRandomArrayElement(eventPlaces);
+  const cityDescription = getRandomCityDescriptions();
+  const placePhotos = getPlacePhotos();
+  const {startEventTime, endEventTime} = getDateTime();
+  const price = getRandomInteger(EventPrice.MIN, EventPrice.MAX);
+  const isFavorite = Boolean(getRandomInteger(0, 1));
+  return {
+    id,
+    type: eventType,
+    city,
+    cityDescription,
+    placePhotos,
+    startEventTime,
+    endEventTime,
+    price,
+    offers: getRandomOffers().filter((offer) => offer.type === eventType),
+    isFavorite,
+  };
+};
+
+export {generateTripEvent};
