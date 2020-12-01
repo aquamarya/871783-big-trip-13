@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import {eventTypes, eventOffers} from "../consts";
+import {createElement} from "../utils";
 
 const createEventTypeList = () => {
   return eventTypes.map((type, id) => {
@@ -94,4 +95,25 @@ const createEditEventTemplate = (editEvent, id) => {
   `;
 };
 
-export {createEditEventTemplate};
+export default class EditEvent {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEditEventTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

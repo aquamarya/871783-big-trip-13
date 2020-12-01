@@ -62,4 +62,11 @@ const generateTripEvent = () => {
   };
 };
 
-export {generateTripEvent};
+const createEvents = (amount) => {
+  return new Array(amount)
+    .fill(``)
+    .map(generateTripEvent)
+    .sort((a, b) => a.startEventTime - b.startEventTime);
+};
+
+export {createEvents};

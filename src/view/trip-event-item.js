@@ -1,3 +1,5 @@
+import {createElement} from "../utils";
+
 const createTripEventItemTemplate = (event) => {
   // const {type, city, offers, price, startEventTime, endEventTime, isFavorite} = event;
   const {type, city, price, startEventTime, endEventTime, isFavorite} = event;
@@ -32,7 +34,7 @@ const createTripEventItemTemplate = (event) => {
   return `
     <li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">${startEventTime}</time>
+        <time class="event__date" datetime="${startEventTime}">${startEventTime}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
         </div>
@@ -63,4 +65,24 @@ const createTripEventItemTemplate = (event) => {
   `;
 };
 
-export {createTripEventItemTemplate};
+export default class TripEventItem {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripEventItemTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
