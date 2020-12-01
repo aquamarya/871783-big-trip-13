@@ -12,12 +12,12 @@ import {render, RenderPosition} from "./utils";
 import {createEvents} from "./mock/event";
 
 const events = createEvents(EVENT_AMOUNT);
-
+const tripInfoElement = new TripInfoView(events).getElement();
 const tripMain = document.querySelector(`.trip-main`);
-render(tripMain, new TripInfoView(events).getElement(), RenderPosition.AFTERBEGIN);
+render(tripMain, tripInfoElement, RenderPosition.AFTERBEGIN);
 
-const tripInfo = document.querySelector(`.trip-info`);
-render(tripInfo, new TripCostView().getElement(), RenderPosition.BEFOREEND);
+// const tripInfo = document.querySelector(`.trip-info`);
+render(tripInfoElement, new TripCostView().getElement(), RenderPosition.BEFOREEND);
 
 const tripControls = document.querySelector(`.trip-controls`);
 render(tripControls, new MenuView().getElement(), RenderPosition.BEFOREEND);
