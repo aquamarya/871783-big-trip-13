@@ -1,30 +1,12 @@
 import {createElement} from "../utils";
 
-// const createTripEventItemTemplate = (event) => {
-// const {type, city, offers, price, startEventTime, endEventTime, isFavorite} = event;
-
-// const getOffer = () => {
-//   return `
-//   <ul class="event__selected-offers">
-//   ${offers.map((offer) => {
-//   return `
-//     <li class="event__offer">
-//       <span class="event__offer-title">${offer.title}</span>
-//       &plus;&euro;&nbsp;
-//       <span class="event__offer-price">${offer.price}</span>
-//     </li>
-//     `;
-// }).join(``)}
-//   </ul>`;
-// };
-// };
-
 export default class TripEventItem {
-  constructor({type, city, price, startEventTime, endEventTime, isFavorite}) {
+  constructor({type, city, price, offers, startEventTime, endEventTime, isFavorite}) {
     this._element = null;
     this._type = type;
     this._city = city;
     this._price = price;
+    this._offers = offers;
     this._startEventTime = startEventTime;
     this._endEventTime = endEventTime;
     this._isFavorite = isFavorite;
@@ -45,13 +27,7 @@ export default class TripEventItem {
           &euro;&nbsp;<span class="event__price-value">${this._price}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">Add luggage</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">30</span>
-          </li>
-        </ul>
+          ${this.getOffer()}
         <button class="event__favorite-btn ${this._isFavorite ? `event__favorite-btn--active` : ``}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -90,4 +66,27 @@ export default class TripEventItem {
     </div>
     `;
   }
+
+  getOffer() {
+    return `
+    <ul class="event__selected-offers">
+    ${this._offers.map((offer) => {
+    return `
+      <li class="event__offer">
+        <span class="event__offer-title">${offer.title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${offer.price}</span>
+      </li>
+      `;
+  }).join(``)}
+    </ul>`;
+  }
 }
+
+// <ul class="event__selected-offers">
+//   <li class="event__offer">
+//     <span class="event__offer-title">Add luggage</span>
+//     &plus;&euro;&nbsp;
+//     <span class="event__offer-price">30</span>
+//   </li>
+// </ul>

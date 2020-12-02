@@ -55,6 +55,8 @@ const renderEvent = (eventList, event) => {
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
+  eventEditComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, replaceFormToCard);
+
   eventEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
     evt.preventDefault();
     replaceFormToCard();
