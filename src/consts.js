@@ -22,7 +22,7 @@ const eventPlaces = [
   `New York`,
   `Milan`
 ];
-const descriptionsAmount = {
+const DescriptionsAmount = {
   MIN: 1,
   MAX: 5
 };
@@ -39,7 +39,7 @@ const eventPlaceDescriptions = [
   `Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`
 ];
-const photosAmount = {
+const PhotosAmount = {
   MIN: 1,
   MAX: 3
 };
@@ -81,6 +81,11 @@ const eventOffers = [
 
 const offerPrices = [50, 80, 15, 5, 40];
 
+const Tabs = {
+  TABLE: `Table`,
+  STATS: `Stats`
+};
+
 const FilterTypes = {
   EVERYTHING: `Everything`,
   FUTURE: `Future`,
@@ -91,12 +96,13 @@ export {
   EVENT_AMOUNT,
   eventTypes,
   eventPlaces,
-  photosAmount,
-  descriptionsAmount,
+  PhotosAmount,
+  DescriptionsAmount,
   eventPlaceDescriptions,
   EventPrice,
   OffersAmount,
   offerPrices,
   eventOffers,
+  Tabs,
   FilterTypes
 };

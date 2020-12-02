@@ -1,25 +1,40 @@
+import {createElement} from "../utils";
 import {FilterTypes} from "../consts";
 
-const createFiltersTemplate = () => {
-  const getFilters = () => {
-    return Object.values(FilterTypes).map((filter) => {
-      const filterToLow = filter.toLowerCase();
-      return (
-        `<div class="trip-filters__filter">
-          <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterToLow}">
-          <label class="trip-filters__filter-label" for="filter-${filterToLow}">${filter}</label>
-        </div>`
-      );
-    }).join(``);
-  };
+export default class Filters {
+  constructor() {
+    this._element = null;
+  }
 
-  return `
-    <h2 class="visually-hidden">Filter events</h2>
+  getTemplate() {
+    return `
     <form class="trip-filters" action="#" method="get">
-        ${getFilters()}
+        ${this.getFilters()}
         <button class="visually-hidden" type="submit">Accept filter</button>
     </form>
   `;
-};
+  }
 
-export {createFiltersTemplate};
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+  getFilters(isChecked) {
+    return Object.values(FilterTypes).map((filter) => {
+      return (
+        `<div class="trip-filters__filter">
+          <input id="filter-${filter}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filter.toLowerCase} ${isChecked ? `checked` : ``}">
+          <label class="trip-filters__filter-label" for="filter-${filter.toLowerCase}">${filter}</label>
+        </div>`
+      );
+    }).join(``);
+  }
+}

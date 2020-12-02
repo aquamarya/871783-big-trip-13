@@ -1,18 +1,18 @@
 import {nanoid} from "nanoid";
 import dayjs from "dayjs";
 import {getRandomInteger, getRandomArrayElement} from "../utils";
-import {eventTypes, eventPlaces, photosAmount, descriptionsAmount, eventPlaceDescriptions, EventPrice, OffersAmount, offerPrices} from "../consts";
+import {eventTypes, eventPlaces, PhotosAmount, DescriptionsAmount, eventPlaceDescriptions, EventPrice, OffersAmount, offerPrices} from "../consts";
 
 const getRandomCityDescriptions = () => {
   let description = ``;
-  for (let i = 0; i < getRandomInteger(descriptionsAmount.MIN, descriptionsAmount.MAX); i++) {
+  for (let i = 0; i < getRandomInteger(DescriptionsAmount.MIN, DescriptionsAmount.MAX); i++) {
     description += eventPlaceDescriptions[i];
   }
   return description.trim();
 };
 
 const getPlacePhotos = () => {
-  return new Array(getRandomInteger(photosAmount.MIN, photosAmount.MAX))
+  return new Array(getRandomInteger(PhotosAmount.MIN, PhotosAmount.MAX))
     .fill(``)
     .map(()=>`http://picsum.photos/248/152?r=${Math.random()})`);
 };
@@ -62,4 +62,11 @@ const generateTripEvent = () => {
   };
 };
 
-export {generateTripEvent};
+const createEvents = (amount) => {
+  return new Array(amount)
+    .fill(``)
+    .map(generateTripEvent)
+    .sort((a, b) => a.startEventTime - b.startEventTime);
+};
+
+export {createEvents};

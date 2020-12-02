@@ -1,20 +1,43 @@
-const createTripInfoTemplate = (event) => {
-  const {startEventTime} = event;
-  const getRouteInfo = () => {
-    const routeInfo = [];
-    for (const eventItem of event) {
-      routeInfo.push(eventItem.city);
-    }
-    return routeInfo.reverse();
-  };
-  return `
+// import dayjs from "dayjs";
+import {createElement} from "../utils";
+import dayjs from "dayjs";
+
+export default class TripInfo {
+  constructor(events, startEventTime, endEventTime) {
+    this._events = events;
+    this._element = null;
+    this._startEventTime = startEventTime;
+    this._endEventTime = endEventTime;
+  }
+
+  getTemplate() {
+    return `
     <section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
-        <h1 class="trip-info__title">${getRouteInfo().join(` &mdash; `)}</h1>
-        <p class="trip-info__dates">${startEventTime}</p>
+        <h1 class="trip-info__title">${this.getRouteInfo().join(` &mdash; `)}</h1>
+        <p class="trip-info__dates">${dayjs(this._startEventTime).format(`YYYY/MM/DD HH:mm`)}&nbsp;&mdash;&nbsp;${dayjs(this._endEventTime).format(`YYYY/MM/DD HH:mm`)}</p>
       </div>
     </section>
   `;
-};
+  }
 
-export {createTripInfoTemplate};
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+  getRouteInfo() {
+    const routeInfo = [];
+    for (const eventItem of this._events) {
+      routeInfo.push(eventItem.city);
+    }
+    return routeInfo.reverse();
+  }
+}
