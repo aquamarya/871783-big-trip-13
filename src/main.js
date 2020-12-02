@@ -16,11 +16,10 @@ const tripInfoElement = new TripInfoView(events).getElement();
 const tripMain = document.querySelector(`.trip-main`);
 render(tripMain, tripInfoElement, RenderPosition.AFTERBEGIN);
 
-// const tripInfo = document.querySelector(`.trip-info`);
 render(tripInfoElement, new TripCostView().getElement(), RenderPosition.BEFOREEND);
 
 const tripControls = document.querySelector(`.trip-controls`);
-render(tripControls, new MenuView().getElement(), RenderPosition.BEFOREEND);
+render(tripControls, new MenuView().getElement(), RenderPosition.AFTERBEGIN);
 render(tripControls, new FiltersView().getElement(), RenderPosition.BEFOREEND);
 
 const pageMain = document.querySelector(`.page-main`);

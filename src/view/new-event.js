@@ -1,7 +1,12 @@
 import {createElement} from "../utils";
 
-const createNewEventTemplate = () => {
-  return `
+export default class NewEvent {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return `
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
@@ -168,15 +173,6 @@ const createNewEventTemplate = () => {
       </section>
     </form>
   `;
-};
-
-export default class NewEvent {
-  constructor() {
-    this._element = null;
-  }
-
-  getTemplate() {
-    return createNewEventTemplate();
   }
 
   getElement() {
