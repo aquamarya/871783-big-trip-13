@@ -1,4 +1,4 @@
-const EVENT_AMOUNT = 20;
+const EVENT_AMOUNT = 11;
 const eventTypes = [
   `Taxi`,
   `Bus`,
