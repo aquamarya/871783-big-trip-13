@@ -1,7 +1,7 @@
 import {nanoid} from "nanoid";
 import dayjs from "dayjs";
 import {getRandomInteger, getRandomArrayElement} from "../utils";
-import {eventTypes, eventPlaces, PhotosAmount, DescriptionsAmount, eventPlaceDescriptions, EventPrice, OffersAmount, offerPrices} from "../consts";
+import {eventTypes, eventPlaces, PhotosAmount, DescriptionsAmount, eventPlaceDescriptions, EventPrice, OffersAmount, eventOffers} from "../consts";
 
 const getRandomCityDescriptions = () => {
   let description = ``;
@@ -27,15 +27,9 @@ const getDateTime = () => {
 
 const getRandomOffers = () => {
   const randomOffers = [];
-  eventTypes.forEach((eventType) => {
-    for (let i = 0; i < getRandomInteger(OffersAmount.MIN, OffersAmount.MAX); i++) {
-      randomOffers.push({
-        type: eventType,
-        title: `${eventType} offer ${i}`,
-        price: offerPrices[getRandomInteger(0, offerPrices.length - 1)],
-      });
-    }
-  });
+  for (let i = 0; i < getRandomInteger(OffersAmount.MIN, OffersAmount.MAX); i++) {
+    randomOffers.push(eventOffers[getRandomInteger(0, eventOffers.length - 1)]);
+  }
   return randomOffers;
 };
 
@@ -57,7 +51,7 @@ const generateTripEvent = () => {
     startEventTime,
     endEventTime,
     price,
-    offers: getRandomOffers().filter((offer) => offer.type === eventType),
+    offers: getRandomOffers(),
     isFavorite,
   };
 };
