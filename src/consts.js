@@ -1,4 +1,4 @@
-const EVENT_AMOUNT = 20;
+const EVENT_AMOUNT = 11;
 const eventTypes = [
   `Taxi`,
   `Bus`,
@@ -48,7 +48,7 @@ const EventPrice = {
   MAX: 1000
 };
 const OffersAmount = {
-  MIN: 1,
+  MIN: 0,
   MAX: 5
 };
 const eventOffers = [
@@ -79,8 +79,6 @@ const eventOffers = [
   },
 ];
 
-const offerPrices = [50, 80, 15, 5, 40];
-
 const Tabs = {
   TABLE: `Table`,
   STATS: `Stats`
@@ -101,7 +99,6 @@ export {
   eventPlaceDescriptions,
   EventPrice,
   OffersAmount,
-  offerPrices,
   eventOffers,
   Tabs,
   FilterTypes

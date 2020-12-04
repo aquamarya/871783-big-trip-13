@@ -1,4 +1,5 @@
 import {createElement} from "../utils";
+import dayjs from "dayjs";
 
 export default class TripEventItem {
   constructor({type, city, price, offers, startEventTime, endEventTime, isFavorite}) {
@@ -13,13 +14,12 @@ export default class TripEventItem {
   }
 
   getTemplate() {
-    // return createTripEventItemTemplate();
     return `
     <li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${this._startEventTime}">${this._startEventTime}</time>
+        <time class="event__date" datetime="${dayjs(this._startEventTime).format(`YYYY-MM-DD`)}">${dayjs(this._startEventTime).format(`MMM-DD`)}</time>
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${this._type.toLowerCase()}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${this._type} ${this._city}</h3>
         ${this.getSchedule()}
@@ -58,9 +58,9 @@ export default class TripEventItem {
     return `
     <div class="event__schedule">
       <p class="event__time">
-        <time class="event__start-time" datetime="${this._startEventTime}">${this._startEventTime}</time>
+        <time class="event__start-time" datetime="${dayjs(this._startEventTime).format(`YYYY-MM-DDTHH:mm`)}">${dayjs(this._startEventTime).format(`HH:mm`)}</time>
         &mdash;
-        <time class="event__end-time" datetime="${this._endEventTime}">${this._endEventTime}</time>
+        <time class="event__end-time" datetime="${dayjs(this._endEventTime).format(`YYYY-MM-DDTHH:mm`)}">${dayjs(this._endEventTime).format(`HH:mm`)}</time>
       </p>
       <p class="event__duration">30M</p>
     </div>
@@ -73,9 +73,9 @@ export default class TripEventItem {
     ${this._offers.map((offer) => {
     return `
       <li class="event__offer">
-        <span class="event__offer-title">${offer.title}</span>
+        <span class="event__offer-title">${offer.title ? offer.title : ``}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
+        <span class="event__offer-price">${offer.price ? offer.price : ``}</span>
       </li>
       `;
   }).join(``)}

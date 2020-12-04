@@ -1,4 +1,3 @@
-// import dayjs from "dayjs";
 import {createElement} from "../utils";
 import dayjs from "dayjs";
 
@@ -15,7 +14,7 @@ export default class TripInfo {
     <section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
         <h1 class="trip-info__title">${this.getRouteInfo().join(` &mdash; `)}</h1>
-        <p class="trip-info__dates">${dayjs(this._startEventTime).format(`YYYY/MM/DD HH:mm`)}&nbsp;&mdash;&nbsp;${dayjs(this._endEventTime).format(`YYYY/MM/DD HH:mm`)}</p>
+        <p class="trip-info__dates">${dayjs(this._startEventTime).format(`MMM DD`)}&nbsp;&mdash;&nbsp;${dayjs(this._endEventTime).format(`DD`)}</p>
       </div>
     </section>
   `;
