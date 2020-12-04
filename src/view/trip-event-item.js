@@ -19,7 +19,7 @@ export default class TripEventItem {
       <div class="event">
         <time class="event__date" datetime="${dayjs(this._startEventTime).format(`YYYY-MM-DD`)}">${dayjs(this._startEventTime).format(`MMM-DD`)}</time>
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${this._type.toLowerCase()}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${this._type} ${this._city}</h3>
         ${this.getSchedule()}
