@@ -1,4 +1,3 @@
-// import dayjs from "dayjs";
 import {createElement} from "../utils";
 import dayjs from "dayjs";
 
