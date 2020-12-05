@@ -7,7 +7,7 @@ import TripEventListView from "./view/trip-event-list";
 import TripEventItemView from "./view/trip-event-item";
 import EditEventView from "./view/edit-event";
 // import NewEventView from "./view/new-event";
-import NoEvent from "./view/no-event";
+import NoEventView from "./view/no-event";
 import {EVENT_AMOUNT} from "./consts";
 import {render, RenderPosition} from "./utils";
 import {createEvents} from "./mock/event";
@@ -74,7 +74,7 @@ events.forEach((event) => {
 // render(eventsList, new NewEventView(events[0]).getElement(), RenderPosition.AFTERBEGIN);
 
 if (events.length === 0) {
-  render(tripEvents, new NoEvent().getElement(), RenderPosition.BEFOREEND);
+  render(tripEvents, new NoEventView().getElement(), RenderPosition.BEFOREEND);
 }
 
 export {events};
