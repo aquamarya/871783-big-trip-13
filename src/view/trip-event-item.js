@@ -1,9 +1,9 @@
-import {createElement} from "../utils";
+import AbstractView from "./absract";
 import dayjs from "dayjs";
 
-export default class TripEventItem {
+export default class TripEventItem extends AbstractView {
   constructor({type, city, price, offers, startEventTime, endEventTime, isFavorite}) {
-    this._element = null;
+    super();
     this._type = type;
     this._city = city;
     this._price = price;
@@ -11,6 +11,7 @@ export default class TripEventItem {
     this._startEventTime = startEventTime;
     this._endEventTime = endEventTime;
     this._isFavorite = isFavorite;
+    this._rollupBtnClickHandler = this._rollupBtnClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -42,18 +43,6 @@ export default class TripEventItem {
   `;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
   getSchedule() {
     return `
     <div class="event__schedule">
@@ -81,12 +70,14 @@ export default class TripEventItem {
   }).join(``)}
     </ul>`;
   }
-}
 
-// <ul class="event__selected-offers">
-//   <li class="event__offer">
-//     <span class="event__offer-title">Add luggage</span>
-//     &plus;&euro;&nbsp;
-//     <span class="event__offer-price">30</span>
-//   </li>
-// </ul>
+  _rollupBtnClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.rollupBtnClick();
+  }
+
+  setRollupBtnClickHandler(callback) {
+    this._callback.rollupBtnClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupBtnClickHandler);
+  }
+}

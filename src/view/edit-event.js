@@ -1,16 +1,18 @@
 import dayjs from "dayjs";
-import {eventTypes, eventOffers} from "../consts";
-import {createElement} from "../utils";
+import {eventTypes, eventOffers, eventPlaces} from "../consts";
+import AbstractView from "./absract";
 
-export default class EditEvent {
-  constructor({type, description, startEventTime, endEventTime, price}) {
-    // this._event = event;
-    this._element = null;
+export default class EditEvent extends AbstractView {
+  constructor({type, city, cityDescription, startEventTime, endEventTime, price}) {
+    super();
     this._type = type;
-    this._description = description;
+    this._city = city;
+    this._description = cityDescription;
     this._startEventTime = startEventTime;
     this._endEventTime = endEventTime;
     this._price = price;
+    this._formCloseHandler = this._formCloseHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate(id) {
@@ -21,7 +23,7 @@ export default class EditEvent {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type.toLowerCase()}.png" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
             <div class="event__type-list">
@@ -35,11 +37,9 @@ export default class EditEvent {
             <label class="event__label  event__type-output" for="event-destination-${id}">
               ${this._type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${this._description}" list="destination-list-${id}">
+            <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${this._city}" list="destination-list-${id}">
             <datalist id="destination-list-${id}">
-              <option value="Amsterdam"></option>
-              <option value="Geneva"></option>
-              <option value="Chamonix"></option>
+              ${this.getDestinationsOptionTemplate()}
             </datalist>
           </div>
           <div class="event__field-group  event__field-group--time">
@@ -79,18 +79,6 @@ export default class EditEvent {
   `;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
   createEventTypeList() {
     return eventTypes.map((type, id) => {
       return (`
@@ -100,6 +88,15 @@ export default class EditEvent {
       </div>`
       );
     }).join(``);
+  }
+
+  getDestinationsOptionTemplate(options) {
+    if (options === null) {
+      return ``;
+    }
+    return eventPlaces.map((option) => {
+      return `<option value="${option}"></option>`;
+    });
   }
 
   getOfferTemplate() {
@@ -116,4 +113,26 @@ export default class EditEvent {
       );
     }).join(``);
   }
+
+  _formCloseHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  }
+
+  setFormCloseHandler(callback) {
+    this._callback.formClose = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseHandler);
+  }
+
+
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
 }

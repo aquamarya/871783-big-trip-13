@@ -1,8 +1,8 @@
-import {createElement} from "../utils";
+import AbstractView from "./absract";
 
-export default class NewEvent {
+export default class NewEvent extends AbstractView {
   constructor() {
-    this._element = null;
+    super();
   }
 
   getTemplate() {
@@ -173,17 +173,5 @@ export default class NewEvent {
       </section>
     </form>
   `;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
