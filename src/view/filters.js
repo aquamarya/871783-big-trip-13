@@ -1,30 +1,19 @@
-import {createElement} from "../utils";
 import {FilterTypes} from "../consts";
+import AbstractView from "./absract";
 
-export default class Filters {
-  constructor() {
-    this._element = null;
+export default class Filters extends AbstractView {
+  constructor(filters) {
+    super();
+    this._filters = filters;
   }
 
   getTemplate() {
     return `
     <form class="trip-filters" action="#" method="get">
-        ${this.getFilters()}
+        ${this.getFilters(this._filters)}
         <button class="visually-hidden" type="submit">Accept filter</button>
     </form>
   `;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getFilters(isChecked) {

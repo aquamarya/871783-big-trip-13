@@ -48,7 +48,7 @@ const EventPrice = {
   MAX: 1000
 };
 const OffersAmount = {
-  MIN: 0,
+  MIN: 1,
   MAX: 5
 };
 const eventOffers = [

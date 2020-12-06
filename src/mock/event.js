@@ -1,6 +1,6 @@
 import {nanoid} from "nanoid";
 import dayjs from "dayjs";
-import {getRandomInteger, getRandomArrayElement} from "../utils";
+import {getRandomInteger, getRandomArrayElement} from "../utils/common";
 import {eventTypes, eventPlaces, PhotosAmount, DescriptionsAmount, eventPlaceDescriptions, EventPrice, OffersAmount, eventOffers} from "../consts";
 
 const getRandomCityDescriptions = () => {

@@ -1,10 +1,6 @@
-import {createElement} from "../utils";
+import AbstractView from "./absract";
 
-export default class NoEvent {
-  constructor() {
-    this._element = null;
-  }
-
+export default class NoEvent extends AbstractView {
   getTemplate() {
     return `
     <section class="trip-events">
@@ -13,17 +9,5 @@ export default class NoEvent {
       <p class="trip-events__msg">Click New Event to create your first point</p>
     </section>
   `;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
