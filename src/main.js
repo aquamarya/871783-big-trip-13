@@ -13,11 +13,11 @@ import {render, RenderPosition, replace} from "./utils/render";
 import {createEvents} from "./mock/event";
 
 const events = createEvents(EVENT_AMOUNT);
-const tripInfoElement = new TripInfoView(events);
+const tripInfoComponent = new TripInfoView(events);
 const tripMain = document.querySelector(`.trip-main`);
-render(tripMain, tripInfoElement, RenderPosition.AFTERBEGIN);
+// render(tripMain, tripInfoComponent, RenderPosition.AFTERBEGIN);
 
-render(tripInfoElement, new TripCostView(), RenderPosition.BEFOREEND);
+// render(tripInfoComponent, new TripCostView(), RenderPosition.BEFOREEND);
 
 const tripControls = document.querySelector(`.trip-controls`);
 render(tripControls, new MenuView(), RenderPosition.AFTERBEGIN);
@@ -25,8 +25,8 @@ render(tripControls, new FiltersView(), RenderPosition.BEFOREEND);
 
 const pageMain = document.querySelector(`.page-main`);
 const tripEvents = pageMain.querySelector(`.trip-events`);
-render(tripEvents, new SortingView(), RenderPosition.BEFOREEND);
-render(tripEvents, new TripEventListView(), RenderPosition.BEFOREEND);
+// render(tripEvents, new SortingView(), RenderPosition.BEFOREEND);
+// render(tripEvents, new TripEventListView(), RenderPosition.BEFOREEND);
 
 const eventsList = document.querySelector(`.trip-events__list`);
 
@@ -69,14 +69,30 @@ const renderEvent = (eventList, event) => {
 };
 
 const eventListComponent = new TripEventListView();
-events.forEach((event) => {
-  renderEvent(eventListComponent, event);
-});
+// events.forEach((event) => {
+//   renderEvent(eventListComponent, event);
+// });
 
 // render(eventsList, new NewEventView(events[0]), RenderPosition.AFTERBEGIN);
 
-if (events.length === 0) {
-  render(tripEvents, new NoEventView(), RenderPosition.BEFOREEND);
-}
+// if (events.length === 0) {
+//   render(tripEvents, new NoEventView(), RenderPosition.BEFOREEND);
+// }
+
+const renderEventList = (eventsContainer) => {
+  if (events.length === 0) {
+    render(eventsContainer, new NoEventView(), RenderPosition.BEFOREEND);
+  } else {
+    render(tripMain, tripInfoComponent, RenderPosition.AFTERBEGIN);
+    render(tripInfoComponent, new TripCostView(), RenderPosition.BEFOREEND);
+    render(eventsContainer, new SortingView(), RenderPosition.BEFOREEND);
+    render(eventsContainer, new TripEventListView(), RenderPosition.BEFOREEND);
+    events.forEach((event) => {
+      renderEvent(eventListComponent, event);
+    });
+  }
+};
+
+renderEventList(tripEvents, events);
 
 export {events};
