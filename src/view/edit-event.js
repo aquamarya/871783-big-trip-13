@@ -3,8 +3,9 @@ import {eventTypes, eventOffers, eventPlaces} from "../consts";
 import AbstractView from "./absract";
 
 export default class EditEvent extends AbstractView {
-  constructor({type, city, cityDescription, startEventTime, endEventTime, price}) {
+  constructor({type, city, cityDescription, startEventTime, endEventTime, price, event}) {
     super();
+    this._event = event;
     this._type = type;
     this._city = city;
     this._description = cityDescription;
@@ -54,7 +55,7 @@ export default class EditEvent extends AbstractView {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${this._price}">
+            <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${this._price}">
           </div>
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
@@ -103,11 +104,11 @@ export default class EditEvent extends AbstractView {
     return eventOffers.map((offer, id) => {
       return (`
         <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-${id}" type="checkbox" name="event-offer-comfort" checked>
           <label class="event__offer-label" for="event-offer-comfort-${id}">
             <span class="event__offer-title">${offer.title}</span>
             &plus;&euro;&nbsp;
-            <span class="event__offer-price">${offer.title}</span>
+            <span class="event__offer-price">${offer.price}</span>
           </label>
         </div>`
       );
@@ -127,7 +128,7 @@ export default class EditEvent extends AbstractView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this._event);
   }
 
   setFormSubmitHandler(callback) {
