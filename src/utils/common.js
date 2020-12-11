@@ -24,7 +24,7 @@ const updateItem = (items, update) => {
 };
 
 const timeSortEvents = (eventA, eventB) => {
-  return eventB.endEventTime.diff(eventB.startEventTime) - eventB.endEventTime.diff(eventA.startEventTime);
+  return (eventB.endEventTime - eventB.startEventTime) - (eventB.endEventTime - eventA.startEventTime);
 };
 
 const priceSortEvents = (eventA, eventB) => {
