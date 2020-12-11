@@ -12,7 +12,7 @@ export default class TripEventItem extends AbstractView {
     this._endEventTime = endEventTime;
     this._isFavorite = isFavorite;
     this._rollupBtnClickHandler = this._rollupBtnClickHandler.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -82,13 +82,13 @@ export default class TripEventItem extends AbstractView {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupBtnClickHandler);
   }
 
-  _handleFavoriteClick(evt) {
+  _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
   }
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._handleFavoriteClick);
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
 }

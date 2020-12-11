@@ -90,6 +90,12 @@ const FilterTypes = {
   PAST: `Past`,
 };
 
+const SortType = {
+  DEFAULT: `default`,
+  TIME: `time`,
+  PRICE: `price`
+};
+
 export {
   EVENT_AMOUNT,
   eventTypes,
@@ -101,5 +107,6 @@ export {
   OffersAmount,
   eventOffers,
   Tabs,
-  FilterTypes
+  FilterTypes,
+  SortType
 };

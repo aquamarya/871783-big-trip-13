@@ -16,8 +16,8 @@ export default class Events {
     this._sortingComponent = new SortingView();
     this._noEventComponent = new NoEventView();
 
-    this._onEventChange = this._onEventChange.bind(this);
-    this._onModeChange = this._onModeChange.bind(this);
+    this._handleEventChange = this._handleEventChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(events) {
@@ -36,13 +36,13 @@ export default class Events {
     }
   }
 
-  _onModeChange() {
+  _handleModeChange() {
     Object
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.resetView());
   }
 
-  _onEventChange(updatedEvent) {
+  _handleEventChange(updatedEvent) {
     this._events = updateItem(this._events, updatedEvent);
     this._eventPresenter[updatedEvent.id].init(updatedEvent);
   }
@@ -67,7 +67,7 @@ export default class Events {
   }
 
   _renderEventItem(event) {
-    const eventPresenter = new EventPresenter(this._eventListComponent, this._onEventChange, this._onModeChange);
+    const eventPresenter = new EventPresenter(this._eventListComponent, this._handleEventChange, this._handleModeChange);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }

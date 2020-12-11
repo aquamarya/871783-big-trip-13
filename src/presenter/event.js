@@ -17,11 +17,11 @@ export default class Event {
     this._eventEditComponent = null;
     this._mode = Mode.DEFAULT;
 
-    this._rollupBtnClickHandler = this._rollupBtnClickHandler.bind(this);
-    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
-    this._formCloseHandler = this._formCloseHandler.bind(this);
-    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._handleRollupBtnClick = this._handleRollupBtnClick.bind(this);
+    this._handleFormClose = this._handleFormClose.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
   init(event) {
@@ -33,13 +33,14 @@ export default class Event {
     this._eventItemComponent = new TripEventItemView(event);
     this._eventEditComponent = new EditEventView(event);
 
-    this._eventItemComponent.setRollupBtnClickHandler(this._rollupBtnClickHandler);
+    this._eventItemComponent.setRollupBtnClickHandler(this._handleRollupBtnClick);
     this._eventItemComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._eventEditComponent.setFormCloseHandler(this._formCloseHandler);
-    this._eventEditComponent.setFormSubmitHandler(this._formSubmitHandler);
+    this._eventEditComponent.setFormCloseHandler(this._handleFormClose);
+    this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     if ([prevEventEditComponent, prevEventItemComponent].includes(null)) {
       render(this._eventListContainer, this._eventItemComponent, RenderPosition.BEFOREEND);
+      return;
     }
 
     if (this._mode === Mode.DEFAULT) {
@@ -85,15 +86,15 @@ export default class Event {
     this._mode = Mode.DEFAULT;
   }
 
-  _rollupBtnClickHandler() {
+  _handleRollupBtnClick() {
     this._replaceCardToForm();
   }
 
-  _formCloseHandler() {
+  _handleFormClose() {
     this._replaceFormToCard();
   }
 
-  _formSubmitHandler(event) {
+  _handleFormSubmit(event) {
     this._changeData(event);
     this._replaceFormToCard();
   }
