@@ -5,7 +5,8 @@ import TripEventListView from "../view/trip-event-list";
 import EventPresenter from "./event";
 import NoEventView from "../view/no-event";
 import {render, RenderPosition} from "../utils/render";
-import {updateItem} from "../utils/common";
+import {updateItem, timeSortEvents, priceSortEvents} from "../utils/common";
+import {SortType} from "../consts";
 
 export default class Events {
   constructor(eventsContainer) {
@@ -18,15 +19,17 @@ export default class Events {
 
     this._handleEventChange = this._handleEventChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(events) {
     this._events = events.slice();
+    this._soursedEvents = events.slice();
 
     if (events.length) {
       this._renderInfo(events);
       this._renderCost(events);
-      this._renderSorting();
+      this._renderSort();
       this._renderEventList();
       events.forEach((event) => {
         this._renderEventItem(event);
@@ -47,6 +50,36 @@ export default class Events {
     this._eventPresenter[updatedEvent.id].init(updatedEvent);
   }
 
+  _sortEvents(sortType) {
+    switch (sortType) {
+      case SortType.PRICE:
+        this._events.sort(priceSortEvents);
+        break;
+      case SortType.TIME:
+        this._events.sort(timeSortEvents);
+        break;
+      default:
+        this._events = this._soursedEvents.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortEvents(sortType);
+    this._clearEventList();
+    this._renderEventList();
+  }
+
+  _renderSort() {
+    render(this._eventsContainer, this._sortingComponent, RenderPosition.AFTERBEGIN);
+    this._sortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+  }
+
   _renderInfo(events) {
     this._tripInfoComponent = new TripInfoView(events);
     const tripMain = document.querySelector(`.trip-main`);
@@ -56,10 +89,6 @@ export default class Events {
   _renderCost() {
     this._costComponent = new TripCostView();
     render(this._tripInfoComponent, this._costComponent, RenderPosition.BEFOREEND);
-  }
-
-  _renderSorting() {
-    render(this._eventsContainer, this._sortingComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderNoEvent() {

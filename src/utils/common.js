@@ -23,4 +23,12 @@ const updateItem = (items, update) => {
   ];
 };
 
-export {getRandomInteger, getRandomArrayElement, updateItem};
+const timeSortEvents = (eventA, eventB) => {
+  return eventB.endEventTime.diff(eventB.startEventTime) - eventB.endEventTime.diff(eventA.startEventTime);
+};
+
+const priceSortEvents = (eventA, eventB) => {
+  return eventB.price - eventA.price;
+};
+
+export {getRandomInteger, getRandomArrayElement, updateItem, timeSortEvents, priceSortEvents};
