@@ -11,7 +11,6 @@ const getRandomArrayElement = (array) => {
 
 const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
-
   if (index === -1) {
     return items;
   }
