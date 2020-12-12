@@ -12,6 +12,7 @@ export default class Events {
   constructor(eventsContainer) {
     this._eventsContainer = eventsContainer;
     this._eventPresenter = {};
+    this._currentSortType = SortType.DEFAULT;
 
     this._eventListComponent = new TripEventListView();
     this._sortingComponent = new SortingView();

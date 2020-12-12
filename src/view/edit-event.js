@@ -3,10 +3,11 @@ import {eventTypes, eventOffers, eventPlaces} from "../consts";
 import AbstractView from "./absract";
 
 export default class EditEvent extends AbstractView {
-  constructor({id, type, city, cityDescription, startEventTime, endEventTime, price, event}) {
+  constructor(event) {
+    const {id, type, city, cityDescription, startEventTime, endEventTime, price} = event;
     super();
-    this._id = id;
     this._event = event;
+    this._id = id;
     this._type = type;
     this._city = city;
     this._description = cityDescription;
