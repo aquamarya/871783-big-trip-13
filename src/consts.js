@@ -91,9 +91,9 @@ const FilterTypes = {
 };
 
 const SortType = {
-  DEFAULT: `default`,
-  TIME: `time`,
-  PRICE: `price`
+  DEFAULT: `sort-day`,
+  TIME: `sort-time`,
+  PRICE: `sort-price`
 };
 
 export {

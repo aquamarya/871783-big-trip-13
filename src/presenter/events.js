@@ -32,9 +32,9 @@ export default class Events {
       this._renderCost(events);
       this._renderSort();
       this._renderEventList();
-      events.forEach((event) => {
-        this._renderEventItem(event);
-      });
+      // events.forEach((event) => {
+      //   this._renderEventItem(event);
+      // });
     } else {
       this._renderNoEvent();
     }
@@ -73,7 +73,10 @@ export default class Events {
 
     this._sortEvents(sortType);
     this._clearEventList();
-    this._renderEventList();
+    // this._renderEventList();
+    this._events.forEach((event) => {
+      this._renderEventItem(event);
+    });
   }
 
   _renderSort() {
