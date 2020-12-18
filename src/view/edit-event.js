@@ -1,90 +1,44 @@
 import dayjs from "dayjs";
 import {eventTypes, eventOffers, eventPlaces} from "../consts";
-import AbstractView from "./absract";
+// import AbstractView from "./abstract";
+// import flatpickr from "flatpickr";
+import SmartView from "./smart";
+// import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
-export default class EditEvent extends AbstractView {
-  constructor({type, city, cityDescription, startEventTime, endEventTime, price}) {
+const BLANK_EVENT = {
+  isFavorite: false
+};
+
+export default class EditEvent extends SmartView {
+  constructor(event = BLANK_EVENT, data) {
     super();
+    const {id, type, city, cityDescription, startEventTime, endEventTime, price, isOffers} = data;
+    this._data = EditEvent.parseEventToData(event);
+    this._datepicker = null;
+    // this._event = event;
+    this._id = id;
     this._type = type;
     this._city = city;
     this._description = cityDescription;
     this._startEventTime = startEventTime;
     this._endEventTime = endEventTime;
     this._price = price;
+    this._isOffers = isOffers;
     this._formCloseHandler = this._formCloseHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-  }
-
-  getTemplate(id) {
-    return `
-    <li class="trip-events__item">
-      <form class="event event--edit" action="#" method="post">
-        <header class="event__header">
-          <div class="event__type-wrapper">
-            <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
-              <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type.toLowerCase()}.png" alt="Event type icon">
-            </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
-            <div class="event__type-list">
-              <fieldset class="event__type-group">
-                <legend class="visually-hidden">Event type</legend>
-                ${this.createEventTypeList(eventTypes)}
-              </fieldset>
-            </div>
-          </div>
-          <div class="event__field-group  event__field-group--destination">
-            <label class="event__label  event__type-output" for="event-destination-${id}">
-              ${this._type}
-            </label>
-            <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${this._city}" list="destination-list-${id}">
-            <datalist id="destination-list-${id}">
-              ${this.getDestinationsOptionTemplate()}
-            </datalist>
-          </div>
-          <div class="event__field-group  event__field-group--time">
-            <label class="visually-hidden" for="event-start-time-${id}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${dayjs(this._startEventTime).format(`YYYY/MM/DD HH:mm`)}">
-            &mdash;
-            <label class="visually-hidden" for="event-end-time-${id}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${dayjs(this._endEventTime).format(`YYYY/MM/DD HH:mm`)}">
-          </div>
-          <div class="event__field-group  event__field-group--price">
-            <label class="event__label" for="event-price-${id}">
-              <span class="visually-hidden">Price</span>
-              &euro;
-            </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${this._price}">
-          </div>
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
-            <span class="visually-hidden">Open event</span>
-          </button>
-        </header>
-        <section class="event__details">
-          <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-            <div class="event__available-offers">
-                ${this.getOfferTemplate()}
-            </div>
-          </section>
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${this._description}</p>
-          </section>
-        </section>
-      </form>
-    </li>
-  `;
+    this._eventTypeToggleHandler = this._eventTypeToggleHandler.bind(this);
+    this._offerChangeHandler = this._offerChangeHandler.bind(this);
+    this._priceChangeHandler = this._priceChangeHandler.bind(this);
+    this._setInnerHandlers();
+    this._setDatepicker();
   }
 
   createEventTypeList() {
-    return eventTypes.map((type, id) => {
+    return eventTypes.map((type) => {
       return (`
       <div class="event__type-item">
-        <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-        <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${type}</label>
+        <input id="event-type-${type}-${this._id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+        <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${this._id}">${type}</label>
       </div>`
       );
     }).join(``);
@@ -100,23 +54,91 @@ export default class EditEvent extends AbstractView {
   }
 
   getOfferTemplate() {
-    return eventOffers.map((offer, id) => {
+    return eventOffers.map((offer) => {
       return (`
         <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-          <label class="event__offer-label" for="event-offer-comfort-${id}">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-${this._id}" type="checkbox" name="event-offer-comfort" checked>
+          <label class="event__offer-label" for="event-offer-comfort-${this._id}">
             <span class="event__offer-title">${offer.title}</span>
             &plus;&euro;&nbsp;
-            <span class="event__offer-price">${offer.title}</span>
+            <span class="event__offer-price">${offer.price}</span>
           </label>
         </div>`
       );
     }).join(``);
   }
 
+  offerTemplate() {
+    return this._isOffers ? this.getOfferTemplate(this._offers) : ``;
+  }
+
+  getTemplate() {
+    return `
+    <li class="trip-events__item">
+      <form class="event event--edit" action="#" method="post">
+        <header class="event__header">
+          <div class="event__type-wrapper">
+            <label class="event__type  event__type-btn" for="event-type-toggle-${this._id}">
+              <span class="visually-hidden">Choose event type</span>
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type.toLowerCase()}.png" alt="Event type icon">
+            </label>
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${this._id}" type="checkbox">
+            <div class="event__type-list">
+              <fieldset class="event__type-group">
+                <legend class="visually-hidden">Event type</legend>
+                ${this.createEventTypeList(eventTypes)}
+              </fieldset>
+            </div>
+          </div>
+          <div class="event__field-group  event__field-group--destination">
+            <label class="event__label  event__type-output" for="event-destination-${this._id}">
+              ${this._type}
+            </label>
+            <input class="event__input  event__input--destination" id="event-destination-${this._id}" type="text" name="event-destination" value="${this._city}" list="destination-list-${this._id}">
+            <datalist id="destination-list-${this._id}">
+              ${this.getDestinationsOptionTemplate()}
+            </datalist>
+          </div>
+          <div class="event__field-group  event__field-group--time">
+            <label class="visually-hidden" for="event-start-time-${this._id}">From</label>
+            <input class="event__input  event__input--time" id="event-start-time-${this._id}" type="text" name="event-start-time" value="${dayjs(this._startEventTime).format(`YYYY/MM/DD HH:mm`)}">
+            &mdash;
+            <label class="visually-hidden" for="event-end-time-${this._id}">To</label>
+            <input class="event__input  event__input--time" id="event-end-time-${this._id}" type="text" name="event-end-time" value="${dayjs(this._endEventTime).format(`YYYY/MM/DD HH:mm`)}">
+          </div>
+          <div class="event__field-group  event__field-group--price">
+            <label class="event__label" for="event-price-${this._id}">
+              <span class="visually-hidden">Price</span>
+              &euro;
+            </label>
+            <input class="event__input  event__input--price" id="event-price-${this._id}" type="text" name="event-price" value="${this._price}">
+          </div>
+          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+        </header>
+        <section class="event__details">
+          <section class="event__section  event__section--offers">
+            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+            <div class="event__available-offers">
+                ${this.offerTemplate()}
+            </div>
+          </section>
+          <section class="event__section  event__section--destination">
+            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+            <p class="event__destination-description">${this._description}</p>
+          </section>
+        </section>
+      </form>
+    </li>
+  `;
+  }
+
   _formCloseHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formClose();
   }
 
   setFormCloseHandler(callback) {
@@ -127,7 +149,7 @@ export default class EditEvent extends AbstractView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(EditEvent.parseDataToEvent(this._data));
   }
 
   setFormSubmitHandler(callback) {
@@ -135,4 +157,88 @@ export default class EditEvent extends AbstractView {
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
+  reset(event) {
+    this.updateData(EditEvent.parseEventToData(event));
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this._setDatepicker();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setFormCloseHandler(this._callback.formClose);
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector(`.event__type-group`)
+      .addEventListener(`click`, this._eventTypeToggleHandler);
+    this.getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`change`, this._destinationChangeHandler);
+
+    if (this._data.isOffers) {
+      this.getElement()
+        .querySelector(`.event__available-offers`)
+        .addEventListener(`click`, this._offersChangeHandler);
+      this.getElement()
+        .querySelector(`.event__input--price`)
+        .addEventListener(`change`, this._priceChangeHandler);
+    }
+  }
+
+  _eventTypeToggleHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      type: evt.target.value
+    });
+
+  }
+
+  _destinationChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      city: evt.target.value
+    });
+  }
+
+  _offersChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      offers: this._data.offers
+    }, true);
+  }
+
+  _priceChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      price: evt.target.value
+    }, true);
+  }
+
+  _setDatepicker() {
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
+  }
+
+  static parseEventToData(event) {
+    return Object.assign(
+        {},
+        event,
+        {
+          isOffers: event.offers !== null
+        }
+    );
+  }
+
+  static parseDataToEvent(data) {
+    data = Object.assign(
+        {},
+        data
+    );
+    delete data.isOffers;
+
+    return data;
+  }
 }
