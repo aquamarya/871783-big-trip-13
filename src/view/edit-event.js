@@ -136,6 +136,41 @@ export default class EditEvent extends SmartView {
   `;
   }
 
+  createEventTypeList() {
+    return eventTypes.map((type, id) => {
+      return (`
+      <div class="event__type-item">
+        <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+        <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${type}</label>
+      </div>`
+      );
+    }).join(``);
+  }
+
+  getDestinationsOptionTemplate(options) {
+    if (options === null) {
+      return ``;
+    }
+    return eventPlaces.map((option) => {
+      return `<option value="${option}"></option>`;
+    });
+  }
+
+  getOfferTemplate() {
+    return eventOffers.map((offer, id) => {
+      return (`
+        <div class="event__offer-selector">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
+          <label class="event__offer-label" for="event-offer-comfort-${id}">
+            <span class="event__offer-title">${offer.title}</span>
+            &plus;&euro;&nbsp;
+            <span class="event__offer-price">${offer.title}</span>
+          </label>
+        </div>`
+      );
+    }).join(``);
+  }
+
   _formCloseHandler(evt) {
     evt.preventDefault();
     this._callback.formClose();
