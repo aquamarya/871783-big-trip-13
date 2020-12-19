@@ -1,4 +1,4 @@
-import Abstract from "../view/absract";
+import Abstract from "../view/abstract";
 
 const RenderPosition = {
   AFTERBEGIN: `afterbegin`,

@@ -1,4 +1,4 @@
-import AbstractView from "./absract";
+import AbstractView from "./abstract";
 import {Tabs} from "../consts";
 
 export default class Menu extends AbstractView {

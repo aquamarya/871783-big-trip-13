@@ -1,4 +1,4 @@
-import AbstractView from "./absract";
+import AbstractView from "./abstract";
 
 export default class TripEventList extends AbstractView {
   getTemplate() {

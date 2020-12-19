@@ -1,4 +1,4 @@
-import AbstractView from "./absract";
+import AbstractView from "./abstract";
 import dayjs from "dayjs";
 
 export default class TripEventItem extends AbstractView {
@@ -29,7 +29,7 @@ export default class TripEventItem extends AbstractView {
           &euro;&nbsp;<span class="event__price-value">${this._price}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
-          ${this.getOffer()}
+          ${this.getOfferTemplate()}
         <button class="event__favorite-btn ${this._isFavorite ? `event__favorite-btn--active` : ``}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -57,7 +57,7 @@ export default class TripEventItem extends AbstractView {
     `;
   }
 
-  getOffer() {
+  getOfferTemplate() {
     return `
     <ul class="event__selected-offers">
     ${this._offers.map((offer) => {

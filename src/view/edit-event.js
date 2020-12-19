@@ -1,21 +1,16 @@
 import dayjs from "dayjs";
 import {eventTypes, eventOffers, eventPlaces} from "../consts";
-// import AbstractView from "./abstract";
-// import flatpickr from "flatpickr";
+import flatpickr from "flatpickr";
 import SmartView from "./smart";
-// import "../../node_modules/flatpickr/dist/flatpickr.min.css";
-
-const BLANK_EVENT = {
-  isFavorite: false
-};
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 export default class EditEvent extends SmartView {
-  constructor(event = BLANK_EVENT, data) {
+  constructor(event = {}, data = {}) {
     super();
     const {id, type, city, cityDescription, startEventTime, endEventTime, price, isOffers} = data;
-    this._data = EditEvent.parseEventToData(event);
+    this._event = event;
+    this._data = EditEvent.parseEventToData(this._event);
     this._datepicker = null;
-    // this._event = event;
     this._id = id;
     this._type = type;
     this._city = city;
@@ -33,12 +28,12 @@ export default class EditEvent extends SmartView {
     this._setDatepicker();
   }
 
-  createEventTypeList() {
+  getEventTypeItem() {
     return eventTypes.map((type) => {
       return (`
       <div class="event__type-item">
-        <input id="event-type-${type}-${this._id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-        <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${this._id}">${type}</label>
+        <input id="event-type-${type.toLowerCase()}-${this._id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
+        <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-${this._id}">${type}</label>
       </div>`
       );
     }).join(``);
@@ -68,7 +63,7 @@ export default class EditEvent extends SmartView {
     }).join(``);
   }
 
-  offerTemplate() {
+  createOfferTemplate() {
     return this._isOffers ? this.getOfferTemplate(this._offers) : ``;
   }
 
@@ -80,13 +75,13 @@ export default class EditEvent extends SmartView {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-${this._id}">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type.toLowerCase()}.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type}.png" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${this._id}" type="checkbox">
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                ${this.createEventTypeList(eventTypes)}
+                ${this.getEventTypeItem(eventTypes)}
               </fieldset>
             </div>
           </div>
@@ -123,7 +118,7 @@ export default class EditEvent extends SmartView {
           <section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
-                ${this.offerTemplate()}
+                ${this.getOfferTemplate()}
             </div>
           </section>
           <section class="event__section  event__section--destination">
@@ -136,41 +131,6 @@ export default class EditEvent extends SmartView {
   `;
   }
 
-  createEventTypeList() {
-    return eventTypes.map((type, id) => {
-      return (`
-      <div class="event__type-item">
-        <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-        <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${type}</label>
-      </div>`
-      );
-    }).join(``);
-  }
-
-  getDestinationsOptionTemplate(options) {
-    if (options === null) {
-      return ``;
-    }
-    return eventPlaces.map((option) => {
-      return `<option value="${option}"></option>`;
-    });
-  }
-
-  getOfferTemplate() {
-    return eventOffers.map((offer, id) => {
-      return (`
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-          <label class="event__offer-label" for="event-offer-comfort-${id}">
-            <span class="event__offer-title">${offer.title}</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">${offer.title}</span>
-          </label>
-        </div>`
-      );
-    }).join(``);
-  }
-
   _formCloseHandler(evt) {
     evt.preventDefault();
     this._callback.formClose();
@@ -181,10 +141,9 @@ export default class EditEvent extends SmartView {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseHandler);
   }
 
-
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(EditEvent.parseDataToEvent(this._data));
+    this._callback.formSubmit(EditEvent.parseDataToEvent(this._event));
   }
 
   setFormSubmitHandler(callback) {
@@ -210,14 +169,14 @@ export default class EditEvent extends SmartView {
     this.getElement()
       .querySelector(`.event__input--destination`)
       .addEventListener(`change`, this._destinationChangeHandler);
+    this.getElement()
+      .querySelector(`.event__input--price`)
+      .addEventListener(`change`, this._priceChangeHandler);
 
     if (this._data.isOffers) {
       this.getElement()
         .querySelector(`.event__available-offers`)
-        .addEventListener(`click`, this._offersChangeHandler);
-      this.getElement()
-        .querySelector(`.event__input--price`)
-        .addEventListener(`change`, this._priceChangeHandler);
+        .addEventListener(`click`, this._offerChangeHandler);
     }
   }
 
@@ -236,10 +195,10 @@ export default class EditEvent extends SmartView {
     });
   }
 
-  _offersChangeHandler(evt) {
+  _offerChangeHandler(evt) {
     evt.preventDefault();
     this.updateData({
-      offers: this._data.offers
+      offers: evt.target.offers
     }, true);
   }
 
@@ -255,6 +214,40 @@ export default class EditEvent extends SmartView {
       this._datepicker.destroy();
       this._datepicker = null;
     }
+
+    if (this._data.startEventTime) {
+      this._datepicker = flatpickr(
+          this.getElement().querySelector(`#event-start-time-1`),
+          {
+            dateFormat: `d/m/Y H:i`,
+            defaultDate: this._data.toDate(),
+            onChange: this._startTimeChangeHandler
+          }
+      );
+    }
+
+    if (this._data.endEventTime) {
+      this._datepicker = flatpickr(
+          this.getElement().querySelector(`#event-end-time-1`),
+          {
+            dateFormat: `d/m/Y H:i`,
+            defaultDate: this._data.toDate(),
+            onChange: this._endTimeChangeHandler
+          }
+      );
+    }
+  }
+
+  _startTimeChangeHandler([userDate]) {
+    this.updateData({
+      startEventTime: dayjs(userDate).hour(23).minute(59).second(59).toDate()
+    });
+  }
+
+  _endTimeChangeHandler([userDate]) {
+    this.updateData({
+      endEventTime: dayjs(userDate).hour(23).minute(59).second(59).toDate()
+    });
   }
 
   static parseEventToData(event) {

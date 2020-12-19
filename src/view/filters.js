@@ -1,5 +1,5 @@
 import {FilterTypes} from "../consts";
-import AbstractView from "./absract";
+import AbstractView from "./abstract";
 
 export default class Filters extends AbstractView {
   constructor(filters) {

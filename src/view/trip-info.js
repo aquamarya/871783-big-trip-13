@@ -1,4 +1,4 @@
-import AbstractView from "./absract";
+import AbstractView from "./abstract";
 import dayjs from "dayjs";
 
 export default class TripInfo extends AbstractView {
