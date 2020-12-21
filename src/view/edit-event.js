@@ -273,4 +273,5 @@ export default class EditEvent extends SmartView {
 
     return data;
   }
+
 }
