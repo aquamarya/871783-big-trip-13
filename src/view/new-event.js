@@ -4,6 +4,7 @@ import {eventTypes} from "../consts";
 export default class NewEvent extends AbstractView {
   constructor(event) {
     super();
+    // const {id, type, city, cityDescription, startEventTime, endEventTime, price, isOffers} = data;
     this._data = NewEvent.parseEventToData(event);
 
     this._formCloseHandler = this._formCloseHandler.bind(this);
@@ -96,8 +97,8 @@ export default class NewEvent extends AbstractView {
     return eventTypes.map((type) => {
       return (`
       <div class="event__type-item">
-        <input id="event-type-${type.toLowerCase()}-${this._id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
-        <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type}-${this._id}">${type.toLowerCase()}</label>
+        <input id="event-type-${type}-${this._id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
+        <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${this._id}">${type.toLowerCase()}</label>
       </div>`
       );
     }).join(``);

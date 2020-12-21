@@ -5,9 +5,9 @@ import SmartView from "./smart";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 export default class EditEvent extends SmartView {
-  constructor(event = {}, data = {}) {
+  constructor(event = {}) {
     super();
-    const {id, type, city, cityDescription, startEventTime, endEventTime, price, isOffers} = data;
+    const {id, type, city, cityDescription, startEventTime, endEventTime, price, isOffers} = event;
     this._event = event;
     this._data = EditEvent.parseEventToData(this._event);
     this._datepicker = null;
@@ -75,7 +75,7 @@ export default class EditEvent extends SmartView {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-${this._id}">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type}.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type.toLowerCase()}.png" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${this._id}" type="checkbox">
             <div class="event__type-list">
@@ -118,7 +118,7 @@ export default class EditEvent extends SmartView {
           <section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
-                ${this.getOfferTemplate()}
+                ${this.createOfferTemplate()}
             </div>
           </section>
           <section class="event__section  event__section--destination">
@@ -217,10 +217,10 @@ export default class EditEvent extends SmartView {
 
     if (this._data.startEventTime) {
       this._datepicker = flatpickr(
-          this.getElement().querySelector(`#event-start-time-1`),
+          this.getElement().querySelector(`input[name='event-start-time']`),
           {
             dateFormat: `d/m/Y H:i`,
-            defaultDate: this._data.toDate(),
+            defaultDate: this._data.startEventTime,
             onChange: this._startTimeChangeHandler
           }
       );
@@ -228,10 +228,10 @@ export default class EditEvent extends SmartView {
 
     if (this._data.endEventTime) {
       this._datepicker = flatpickr(
-          this.getElement().querySelector(`#event-end-time-1`),
+          this.getElement().querySelector(`input[name='event-end-time']`),
           {
             dateFormat: `d/m/Y H:i`,
-            defaultDate: this._data.toDate(),
+            defaultDate: this._data.endEventTime,
             onChange: this._endTimeChangeHandler
           }
       );
@@ -241,13 +241,17 @@ export default class EditEvent extends SmartView {
   _startTimeChangeHandler([userDate]) {
     this.updateData({
       startEventTime: dayjs(userDate).hour(23).minute(59).second(59).toDate()
-    });
+    },
+    true
+    );
   }
 
   _endTimeChangeHandler([userDate]) {
     this.updateData({
       endEventTime: dayjs(userDate).hour(23).minute(59).second(59).toDate()
-    });
+    },
+    true
+    );
   }
 
   static parseEventToData(event) {
