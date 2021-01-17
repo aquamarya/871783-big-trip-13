@@ -1,5 +1,6 @@
 import AbstractView from "./abstract";
 import dayjs from "dayjs";
+import {getEventDuration} from "../utils/common";
 
 export default class TripEventItem extends AbstractView {
   constructor({type, city, price, offers, startEventTime, endEventTime, isFavorite}) {
@@ -45,6 +46,7 @@ export default class TripEventItem extends AbstractView {
   }
 
   getSchedule() {
+    const duration = getEventDuration(this._startEventTime, this._endEventTime);
     return `
     <div class="event__schedule">
       <p class="event__time">
@@ -52,12 +54,16 @@ export default class TripEventItem extends AbstractView {
         &mdash;
         <time class="event__end-time" datetime="${dayjs(this._endEventTime).format(`YYYY-MM-DDTHH:mm`)}">${dayjs(this._endEventTime).format(`HH:mm`)}</time>
       </p>
-      <p class="event__duration">30M</p>
+      <p class="event__duration">${duration}</p>
     </div>
     `;
   }
 
   getOfferTemplate() {
+    if (!this._offers.length) {
+      return ``;
+    }
+
     return `
     <ul class="event__selected-offers">
     ${this._offers.map((offer) => {

@@ -73,7 +73,7 @@ export default class Events {
 
     this._sortEvents(sortType);
     this._clearEventList();
-    // this._renderEventList();
+    this._renderEventList();
     this._events.forEach((event) => {
       this._renderEventItem(event);
     });

@@ -1,17 +1,70 @@
-import AbstractView from "./abstract";
-import {eventTypes} from "../consts";
+import dayjs from "dayjs";
+import {eventTypes, eventOffers, eventPlaces} from "../consts";
+import flatpickr from "flatpickr";
+import SmartView from "./smart";
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
-export default class NewEvent extends AbstractView {
+export default class NewEvent extends SmartView {
   constructor(event) {
     super();
-    // const {id, type, city, cityDescription, startEventTime, endEventTime, price, isOffers} = data;
     this._data = NewEvent.parseEventToData(event);
 
     this._formCloseHandler = this._formCloseHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._eventTypeToggleHandler = this._eventTypeToggleHandler.bind(this);
+    this._offerChangeHandler = this._offerChangeHandler.bind(this);
+    this._priceChangeHandler = this._priceChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatepicker();
+  }
+
+  getPhotoTemplate(photos) {
+    return photos.map((photo) => {
+      return (
+        `<img class="event__photo" src="${photo}" alt="Event photo">`
+      );
+    }).join(``);
+  }
+
+  getEventTypeItem() {
+    return eventTypes.map((type) => {
+      return (`
+      <div class="event__type-item">
+        <input id="event-type-${type}-${this._id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
+        <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${this._id}">${type.toLowerCase()}</label>
+      </div>`
+      );
+    }).join(``);
+  }
+
+  getDestinationsOptionTemplate(options) {
+    if (options === null) {
+      return ``;
+    }
+    return eventPlaces.map((option) => {
+      return `<option value="${option}"></option>`;
+    });
+  }
+
+  getOfferTemplate() {
+    if (!eventOffers.length) {
+      return ``;
+    }
+
+    return eventOffers.map((offer) => {
+      const checked = offer.isChecked ? `checked` : ``;
+      return (`
+        <div class="event__offer-selector">
+          <input class="event__offer-checkbox  visually-hidden" id="${offer.title.toLowerCase()}-${this._id}" type="checkbox" name="event-offer-${offer.title.toLowerCase()}-${this._id}" ${checked}>
+          <label class="event__offer-label" for="${offer.title.toLowerCase()}-${this._id}">
+            <span class="event__offer-title">${offer.title}</span>
+            &plus;&euro;&nbsp;
+            <span class="event__offer-price">${offer.price}</span>
+          </label>
+        </div>`
+      );
+    }).join(``);
   }
 
   getTemplate() {
@@ -34,31 +87,29 @@ export default class NewEvent extends AbstractView {
         </div>
 
         <div class="event__field-group  event__field-group--destination">
-          <label class="event__label  event__type-output" for="event-destination-1">
-            Flight
+          <label class="event__label  event__type-output" for="event-destination-${this._id}">
+            ${this._type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
-          <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
+          <input class="event__input  event__input--destination" id="event-destination-${this._id}" type="text" name="event-destination" value="Geneva" list="destination-list-${this._id}">
+          <datalist id="destination-list-${this._id}">
+            ${this.getDestinationsOptionTemplate()}
           </datalist>
         </div>
 
         <div class="event__field-group  event__field-group--time">
-          <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="19/03/19 00:00">
+          <label class="visually-hidden" for="event-start-time-${this._id}">From</label>
+          <input class="event__input  event__input--time" id="event-start-time-${this._id}" type="text" name="event-start-time" value="${dayjs(this._startEventTime).format(`DD/MM/YY HH:mm`)}">
           &mdash;
-          <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="19/03/19 00:00">
+          <label class="visually-hidden" for="event-end-time-${this._id}">To</label>
+          <input class="event__input  event__input--time" id="event-end-time-${this._id}" type="text" name="event-end-time" value="${dayjs(this._endEventTime).format(`DD/MM/YY HH:mm`)}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
-          <label class="event__label" for="event-price-1">
+          <label class="event__label" for="event-price-${this._id}">
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+          <input class="event__input  event__input--price" id="event-price-${this._id}" type="text" name="event-price" value="${this._price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -67,12 +118,14 @@ export default class NewEvent extends AbstractView {
       <section class="event__details">
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-          ${this.getOfferTemplate()}
+          <div class="event__available-offers">
+            ${this.getOfferTemplate()}
+          </div>
         </section>
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+          <p class="event__destination-description">${this._description}</p>
 
           <div class="event__photos-container">
             <div class="event__photos-tape">
@@ -83,42 +136,6 @@ export default class NewEvent extends AbstractView {
       </section>
     </form>
   `;
-  }
-
-  getPhotoTemplate(photos) {
-    return photos.map((photo) => {
-      return (
-        `<img class="event__photo" src="${photo}" alt="Event photo">`
-      );
-    }).join(``);
-  }
-
-  getEventTypeItem() {
-    return eventTypes.map((type) => {
-      return (`
-      <div class="event__type-item">
-        <input id="event-type-${type}-${this._id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
-        <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${this._id}">${type.toLowerCase()}</label>
-      </div>`
-      );
-    }).join(``);
-  }
-
-  getOfferTemplate() {
-    return `
-     <div class="event__available-offers">
-    ${this._offers.map((offer) => {
-    return `
-      <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-        <label class="event__offer-label" for="event-offer-luggage-1">
-          <span class="event__offer-title">${offer.title ? offer.title : ``}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price ? offer.price : ``}</span>
-        </label>
-      </div>`;
-  }).join(``)}
-    </div>`;
   }
 
   _formCloseHandler(evt) {
@@ -204,6 +221,28 @@ export default class NewEvent extends AbstractView {
     if (this._datepicker) {
       this._datepicker.destroy();
       this._datepicker = null;
+    }
+
+    if (this._data.startEventTime) {
+      this._datepicker = flatpickr(
+          this.getElement().querySelector(`input[name='event-start-time']`),
+          {
+            dateFormat: `d/m/y H:i`,
+            defaultDate: this._data.startEventTime,
+            onChange: this._startTimeChangeHandler
+          }
+      );
+    }
+
+    if (this._data.endEventTime) {
+      this._datepicker = flatpickr(
+          this.getElement().querySelector(`input[name='event-end-time']`),
+          {
+            dateFormat: `d/m/y H:i`,
+            defaultDate: this._data.endEventTime,
+            onChange: this._endTimeChangeHandler
+          }
+      );
     }
   }
 

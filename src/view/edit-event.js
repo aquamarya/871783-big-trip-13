@@ -7,7 +7,7 @@ import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 export default class EditEvent extends SmartView {
   constructor(event = {}) {
     super();
-    const {id, type, city, cityDescription, startEventTime, endEventTime, price, isOffers} = event;
+    const {id, type, city, cityDescription, startEventTime, endEventTime, price, placePhotos} = event;
     this._event = event;
     this._data = EditEvent.parseEventToData(this._event);
     this._datepicker = null;
@@ -18,7 +18,7 @@ export default class EditEvent extends SmartView {
     this._startEventTime = startEventTime;
     this._endEventTime = endEventTime;
     this._price = price;
-    this._isOffers = isOffers;
+    this._photos = placePhotos;
     this._formCloseHandler = this._formCloseHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._eventTypeToggleHandler = this._eventTypeToggleHandler.bind(this);
@@ -49,11 +49,16 @@ export default class EditEvent extends SmartView {
   }
 
   getOfferTemplate() {
+    if (!eventOffers.length) {
+      return ``;
+    }
+
     return eventOffers.map((offer) => {
+      const checked = offer.isChecked ? `checked` : ``;
       return (`
         <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-${this._id}" type="checkbox" name="event-offer-comfort" checked>
-          <label class="event__offer-label" for="event-offer-comfort-${this._id}">
+          <input class="event__offer-checkbox  visually-hidden" id="${offer.title.toLowerCase()}-${this._id}" type="checkbox" name="event-offer-${offer.title.toLowerCase()}-${this._id}" ${checked}>
+          <label class="event__offer-label" for="${offer.title.toLowerCase()}-${this._id}">
             <span class="event__offer-title">${offer.title}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${offer.price}</span>
@@ -63,8 +68,12 @@ export default class EditEvent extends SmartView {
     }).join(``);
   }
 
-  createOfferTemplate() {
-    return this._isOffers ? this.getOfferTemplate(this._offers) : ``;
+  getPhotoTemplate() {
+    return this._photos.map((photo) => {
+      return (
+        `<img class="event__photo" src="${photo}" alt="Event photo">`
+      );
+    }).join(``);
   }
 
   getTemplate() {
@@ -96,10 +105,10 @@ export default class EditEvent extends SmartView {
           </div>
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-${this._id}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-${this._id}" type="text" name="event-start-time" value="${dayjs(this._startEventTime).format(`YYYY/MM/DD HH:mm`)}">
+            <input class="event__input  event__input--time" id="event-start-time-${this._id}" type="text" name="event-start-time" value="${dayjs(this._startEventTime).format(`DD/MM/YY HH:mm`)}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-${this._id}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-${this._id}" type="text" name="event-end-time" value="${dayjs(this._endEventTime).format(`YYYY/MM/DD HH:mm`)}">
+            <input class="event__input  event__input--time" id="event-end-time-${this._id}" type="text" name="event-end-time" value="${dayjs(this._endEventTime).format(`DD/MM/YY HH:mm`)}">
           </div>
           <div class="event__field-group  event__field-group--price">
             <label class="event__label" for="event-price-${this._id}">
@@ -118,12 +127,17 @@ export default class EditEvent extends SmartView {
           <section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
-                ${this.createOfferTemplate()}
+                ${this.getOfferTemplate()}
             </div>
           </section>
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
             <p class="event__destination-description">${this._description}</p>
+            <div class="event__photos-container">
+              <div class="event__photos-tape">
+                ${this.getPhotoTemplate()}
+              </div>
+            </div>
           </section>
         </section>
       </form>
@@ -143,6 +157,9 @@ export default class EditEvent extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
+    // if (this._startEventTime > this._endEventTime) {
+    //   alert(`Error date interval`);
+    // }
     this._callback.formSubmit(EditEvent.parseDataToEvent(this._event));
   }
 
@@ -219,7 +236,7 @@ export default class EditEvent extends SmartView {
       this._datepicker = flatpickr(
           this.getElement().querySelector(`input[name='event-start-time']`),
           {
-            dateFormat: `d/m/Y H:i`,
+            dateFormat: `d/m/y H:i`,
             defaultDate: this._data.startEventTime,
             onChange: this._startTimeChangeHandler
           }
@@ -230,7 +247,7 @@ export default class EditEvent extends SmartView {
       this._datepicker = flatpickr(
           this.getElement().querySelector(`input[name='event-end-time']`),
           {
-            dateFormat: `d/m/Y H:i`,
+            dateFormat: `d/m/y H:i`,
             defaultDate: this._data.endEventTime,
             onChange: this._endTimeChangeHandler
           }
@@ -244,6 +261,7 @@ export default class EditEvent extends SmartView {
     },
     true
     );
+    this._datepicker.set(`minDate`, userDate);
   }
 
   _endTimeChangeHandler([userDate]) {

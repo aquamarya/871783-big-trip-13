@@ -1,3 +1,21 @@
+import dayjs from 'dayjs';
+import durationPlugin from 'dayjs/plugin/duration';
+
+dayjs.extend(durationPlugin);
+
+const getEventDuration = (dateStart, dateEnd) => {
+  const datesDuration = dayjs.duration(dayjs(dateEnd).diff(dayjs(dateStart)));
+  const days = datesDuration.days();
+  const hours = datesDuration.hours();
+  const minutes = datesDuration.minutes();
+
+  return `
+    ${days > 0 ? days + `D` : ``}
+    ${hours > 0 ? hours.padStart(2, `0`) + `H` : ``}
+    ${minutes}M
+  `;
+};
+
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -30,4 +48,4 @@ const priceSortEvents = (eventA, eventB) => {
   return eventB.price - eventA.price;
 };
 
-export {getRandomInteger, getRandomArrayElement, updateItem, timeSortEvents, priceSortEvents};
+export {getRandomInteger, getRandomArrayElement, updateItem, timeSortEvents, priceSortEvents, getEventDuration};
